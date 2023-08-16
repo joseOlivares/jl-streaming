@@ -1,11 +1,18 @@
-const express =require('express');
-const app= express();
+const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, { /* options */ });
 
+/*
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+*/
+
 
 //routes
 app.use(require('./routes/streaming.route.js'));

@@ -18,9 +18,10 @@
         let socket=io();
        
         socket.on('stream',(image)=>{
-           // let img =document.getElementById('play');
-            console.log(image)
-            //img.src=image;
+           let img =document.getElementById('play');
+           
+            img.src=image;
+            debugger;
         });
     </script>
 </body>

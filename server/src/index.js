@@ -1,7 +1,31 @@
-const http=require('./app');
+//const http=require('./app');
+const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, { /* options */ });
+
 const PORT=process.env.PORT || 3200;
 
-http.listen(PORT,(error)=>{
+
+io.on('connection',(socket)=>{
+    console.log("emitiendo");
+        socket.on('stream',(imgStream)=>{
+            console.log("Entra en socketon stream");
+            socket.broadcast.emit('stream',imgStream);
+        });
+});
+
+
+//routes
+app.use(require('./routes/streaming.route.js'));
+//static files
+app.use(express.static(__dirname + "/public"));
+
+
+httpServer.listen(PORT,(error)=>{
 
     if(!error){
         console.log(`Server is running, App is listening on port ${PORT}`);    
@@ -10,3 +34,4 @@ http.listen(PORT,(error)=>{
     }
     
 });
+
