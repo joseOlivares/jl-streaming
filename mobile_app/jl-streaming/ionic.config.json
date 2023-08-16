@@ -1,0 +1,7 @@
+{
+  "name": "jl-streaming",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

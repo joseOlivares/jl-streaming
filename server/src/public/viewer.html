@@ -6,12 +6,21 @@
     <title>Camera Viewer</title>
 
     <script src="/js/socket.io.min.js"></script>
+    <style>
+        .fit-image{
+            max-inline-size: 100%;
+            block-size: auto;
+            aspect-ratio: 2/1;
+            object-fit: cover;
+            object-position: top center;
+        }
+    </style>
 
 </head>
 <body>
 
     <div style="text-align: center;">
-        <img id="play" src="" alt="imagen-video" >
+        <img id="play" src="" alt="imagen-video" class="fit-image">
     </div>
     
     <script>
