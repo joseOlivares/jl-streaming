@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Viewer</title>
+
+    <script src="/js/socket.io.min.js"></script>
+
+</head>
+<body>
+
+    <div style="text-align: center;">
+        <img id="play" src="" alt="imagen-video" >
+    </div>
+    
+    <script>
+        let socket=io();
+       
+        socket.on('stream',(image)=>{
+           // let img =document.getElementById('play');
+            console.log(image)
+            //img.src=image;
+        });
+    </script>
+</body>
+</html>
