@@ -131,3 +131,6 @@ dist
 
 # proyecto android generado
 android/
+
+#ignirando certificado
+cert/
