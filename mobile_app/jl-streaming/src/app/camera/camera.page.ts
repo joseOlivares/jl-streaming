@@ -59,6 +59,7 @@ export class CameraPage implements OnInit, OnDestroy {
 
   async initializeCamera(){
     const navigator = window.navigator as any;//se agregó solo para pruebas, no es necesario
+
     if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
       console.log("initializeCamera");
        this.constraints.video.facingMode=this.useFrontCamera ? "user" : "environment";

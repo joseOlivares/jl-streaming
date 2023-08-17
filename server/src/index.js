@@ -1,13 +1,25 @@
 //const http=require('./app');
 const express = require("express");
-const { createServer } = require("http");
+const { createServer } = require("https");
+
+
+/*** FOR HTTPS */
+const fs =require('fs') ;
+const options={
+    pfx: fs.readFileSync(__dirname +'/cert/jlstreamapp.pfx'),
+    passphrase: 'jlstreamPWD'
+}
+/**  */
+
 const { Server } = require("socket.io");
 
 const app = express();
-const httpServer = createServer(app);
+//const httpServer = createServer(app);
+const httpServer=createServer(options,app);
 const io = new Server(httpServer, { /* options */ });
 
-const PORT=process.env.PORT || 3200;
+//const PORT=process.env.PORT || 3200;
+const PORT=443;
 
 
 io.on('connection',(socket)=>{
