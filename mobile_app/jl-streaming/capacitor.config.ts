@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'jlstreaming.iconnsv.com',
   appName: 'jl-streaming',
   webDir: 'www',
   server: {
