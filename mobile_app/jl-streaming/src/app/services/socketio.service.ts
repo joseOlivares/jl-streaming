@@ -7,9 +7,7 @@ import { Socket } from 'ngx-socket-io';
 })
 export class SocketioService {
 
-  constructor(private socket: Socket) { }
-
- intervalo:any;
+  constructor(private socket: Socket) { socket.connect();}
 
   streamVideo(canva:any){
     //debugger;
@@ -17,7 +15,4 @@ export class SocketioService {
 
   }
 
-  /*stopStreming(){
-    clearInterval(this.intervalo);
-  }*/
 }

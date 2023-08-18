@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 const config: SocketIoConfig = {
 	url: environment.socketUrl, // socket server url;
 	options: {
-		transports: ['websocket']
+		transports: ['websocket'],
 	}
 }
 

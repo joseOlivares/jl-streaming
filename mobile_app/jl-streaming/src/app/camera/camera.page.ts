@@ -1,5 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SocketioService } from '../services/socketio.service';
+//import { SocketioService } from '../services/socketio.service';
+import {Socket}from 'ngx-socket-io'
+import {Camera, CameraResultType} from '@capacitor/camera'
+
+
+import { CameraPreview, CameraPreviewOptions } from '@capacitor-community/camera-preview';
+
+
+
 
 @Component({
   selector: 'app-camera',
@@ -7,12 +15,12 @@ import { SocketioService } from '../services/socketio.service';
   styleUrls: ['./camera.page.scss'],
 })
 export class CameraPage implements OnInit, OnDestroy {
+  /*
   canva:any;
   context:any;
   video:any;
 
   videoInterval:any;
-
     // video constraints
    constraints = {
       video: {
@@ -36,27 +44,53 @@ export class CameraPage implements OnInit, OnDestroy {
     // current video stream
      videoStream:any;
 
+     picture:any;
 
-  constructor(private socketService:SocketioService) { }
+     */
+
+     picture:any;
+     cameraActive=false;
+
+     canva:any;
+     context:any;
+     video:any;
+     videoInterval:any;
+
+  constructor(private socketService:Socket) { }
 
 
-  ngOnInit() {
+  ngOnInit() {/*
     this.canva=document.querySelector('#canva');
     this.context=this.canva.getContext('2d');
     this.video=document.querySelector('#video');
-
     this.canva.style.display='none';
     this.canva.width=1280; //this.video.videoWidth;
     this.canva.height=720; //this.video.videoHeight;
     this.context.width=this.canva.width;
     this.context.height=this.canva.height;
 
+   //this.initializeCamera();
 
-   this.initializeCamera();
+    this.picture='';
+
+    */
+
+    this.canva=document.querySelector('#canva');
+    this.context=this.canva.getContext('2d');
+    //this.canva.style.display='none';
+    this.canva.width=640; //this.video.videoWidth;
+    this.canva.height=480; //this.video.videoHeight;
+    this.context.width=this.canva.width;
+    this.context.height=this.canva.height;
+
+    this.socketService.connect();
+    this.openCameraPrev();
+
 
   }
 
 
+  /*
   async initializeCamera(){
     const navigator = window.navigator as any;//se agregó solo para pruebas, no es necesario
 
@@ -87,6 +121,50 @@ export class CameraPage implements OnInit, OnDestroy {
       //emitiendo imagen para video
       this.socketService.streamVideo(this.canva);
     },30)
+  }
+
+  async openCamera(){
+    const image=await Camera.getPhoto({
+      quality:90,
+      allowEditing:false,
+      resultType: CameraResultType.Uri,
+    });
+    this.picture=image.webPath;
+  }
+*/
+
+  async openCameraPrev(){
+    const cameraPreviewOptions: CameraPreviewOptions = {
+      position: 'rear',
+      parent:'cameraPreview',
+      className:'video-element',
+      enableZoom:true,
+      width: window.screen.width, //width of the camera display
+      height: window.screen.height - 200, //height of the camera
+      //toBack:true
+    };
+    CameraPreview.start(cameraPreviewOptions).then(()=>{
+      this.video=document.querySelector('#video');//asignando video cuando se cree el elemento
+    });
+    this.cameraActive=true;
+    this.streamVideo();
+  }
+
+  streamVideo(){
+    this.videoInterval=setInterval(()=>{
+      this.context.drawImage(this.video,0,0,this.context.width, this.context.height);
+      //emitiendo imagen para video
+      //this.socketService.streamVideo(this.canva);
+      this.socketService.emit('stream',this.canva.toDataURL('image/webp'));
+    },30)
+  }
+
+  stopCamera(){
+    CameraPreview.stop();
+  }
+
+  flipCamera(){
+    CameraPreview.flip();
   }
 
   ngOnDestroy(): void {

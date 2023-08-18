@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  socketUrl: 'https://192.168.1.16'
+  socketUrl: 'https://192.168.1.16:3400/'
 };
 
 /*
