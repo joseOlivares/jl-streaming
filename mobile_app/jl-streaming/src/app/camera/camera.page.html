@@ -5,39 +5,34 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!--
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">camera</ion-title>
-    </ion-toolbar>
-  </ion-header>
--->
 
-<!--   <div>
-    <video src="" id="video" class="video-element2" autoplay="true">
-    </video>
-    <canvas id="canva"></canvas>
-    <div id="status"></div>
 
-    <img [src]="picture" alt="">
+  <div id="cameraPreview">
   </div>
--->
-
-<!-- Web Only-->
- <div id="cameraPreview"></div>
- <canvas id="canva"></canvas>
-<!-- end-->
-
-<div *ngIf="cameraActive">
-  <ion-button (click)="stopCamera()" expand="block" id="close">
-      <ion-icon slot="icon-only" name="close-circle"></ion-icon>
-  </ion-button>
+  <br>
+  <img id="foto" [src]="myPic" alt="" style="width:100%; background-color:cadetblue" >
 
 
-  <ion-button (click)="flipCamera()" expand="block" id="flip">
-      <ion-icon slot="icon-only" name="repeat"></ion-icon>
-  </ion-button>
-</div>
+  <canvas id="canvas"  style="background-color: blueviolet;"></canvas>
+  <br><br>
+
+
+  <div *ngIf="!cameraActive">
+    <ion-button (click)="openCameraPrev()" expand="block" id="capture">
+      <ion-icon slot="icon-only" name="videocam-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <div *ngIf="cameraActive">
+    <ion-button (click)="streamVideo()" expand="block" id="streaming">
+      <ion-icon name="radio-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)="stopCamera()" expand="block" id="close">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+    </ion-button>
+    <ion-button (click)="flipCamera()" expand="block" id="flip">
+        <ion-icon slot="icon-only" name="repeat"></ion-icon>
+    </ion-button>
+  </div>
 
 
 </ion-content>

@@ -17,6 +17,15 @@ ion-content {
   z-index: 99999;
 }
 
+#streaming {
+  position: absolute;
+  bottom: 30px;
+  left: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
+  z-index: 99999;
+}
+
 #flip {
   position: absolute;
   bottom: 30px;
@@ -36,6 +45,10 @@ ion-content {
 }
 
 #capture::part(native) {
+  border-radius: 30px;
+}
+
+#streaming::part(native) {
   border-radius: 30px;
 }
 
