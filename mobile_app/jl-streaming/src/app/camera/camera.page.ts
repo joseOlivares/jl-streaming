@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SocketioService } from '../services/socketio.service';
+import {Socket}from 'ngx-socket-io'
+
+//@ts-ignore
+import Webcam from '../../../node_modules/webcam-easy/dist/webcam-easy.min.js';
 
 @Component({
   selector: 'app-camera',
@@ -7,86 +10,91 @@ import { SocketioService } from '../services/socketio.service';
   styleUrls: ['./camera.page.scss'],
 })
 export class CameraPage implements OnInit, OnDestroy {
-  canva:any;
-  context:any;
-  video:any;
 
   videoInterval:any;
+  cameraActive=false;
 
-    // video constraints
-   constraints = {
-      video: {
-        width: {
-          min: 1280,
-          ideal: 1920,
-          max: 2560,
-        },
-        height: {
-          min: 720,
-          ideal: 1080,
-          max: 1440,
-        },
-        facingMode:'user'
-      },
-    };
+  webCam:any;
+  FRONT_CAMERA='user';
+  REAR_CAMERA='environment'
+  camera=this.REAR_CAMERA;
 
-    // use front face camera
-    useFrontCamera :boolean = true;
+  webCamHeight= window.screen.height - 200; //height of the camera
+  webCamWidth= window.screen.width;//width of the camera display
 
-    // current video stream
-     videoStream:any;
+  canvasElement:any;
 
 
-  constructor(private socketService:SocketioService) { }
+
+
+
+
+  constructor(private socketService:Socket) { }
 
 
   ngOnInit() {
-    this.canva=document.querySelector('#canva');
-    this.context=this.canva.getContext('2d');
-    this.video=document.querySelector('#video');
 
-    this.canva.style.display='none';
-    this.canva.width=1280; //this.video.videoWidth;
-    this.canva.height=720; //this.video.videoHeight;
-    this.context.width=this.canva.width;
-    this.context.height=this.canva.height;
-
-
-   this.initializeCamera();
 
   }
 
 
   async initializeCamera(){
-    const navigator = window.navigator as any;//se agregó solo para pruebas, no es necesario
+    this.socketService.connect();
+    const webcamElement = document.getElementById('webcam');
+    this.canvasElement = document.getElementById('canvas');
+    const snapSoundElement = document.getElementById('snapSound');
+    this.webCam = new Webcam(webcamElement, this.camera, this.canvasElement, snapSoundElement);
 
-    if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-      console.log("initializeCamera");
-       this.constraints.video.facingMode=this.useFrontCamera ? "user" : "environment";
-      try {
-        this.videoStream = await navigator.mediaDevices.getUserMedia(this.constraints);
-        this.video.srcObject = this.videoStream;
-        this.streamVideo();
-        //emitiendo imagen para video
-        //this.socketService.streamVideo(this.canva);
-
-      } catch (err) {
-        alert("No se puede acceder a la camara");
-      }
-
-    }else{
-        alert("No se puede acceder a la cámara, revise los permisos");
-
-    }
+      this.webCam.start()
+        .then((result: any)=>{
+            console.log("webcam started");
+            this.cameraActive=true;
+        })
+        .catch((err:any) => {
+            console.log(err);
+            this.cameraActive=false;
+        });
 
   }
 
+  startCamera(){
+    this.socketService.connect();
+
+    this.webCam.start()
+      .then((result: any)=>{
+        console.log("webcam started");
+        this.cameraActive=true;
+      })
+      .catch((err:any) => {
+          console.log(err);
+          this.cameraActive=false;
+      });
+  }
+
   streamVideo(){
+    let x=this.canvasElement.toDataURL('image/webp');
+    debugger;
+    /*
     this.videoInterval=setInterval(()=>{
-      this.context.drawImage(this.video,0,0,this.context.width, this.context.height);
-      //emitiendo imagen para video
-      this.socketService.streamVideo(this.canva);
+        this.socketService.emit('stream',this.canvasElement.toDataURL('image/webp'));
     },30)
+    */
+  }
+
+  flipCamera(){
+    this.webCam.flip();
+    this.webCam.start();
+  }
+
+  stopCamera(){
+    this.webCam.stop();
+    this.cameraActive=false;
+    this.socketService.disconnect();
+  }
+
+
+  ngAfterViewInit(): void {
+      this.initializeCamera(); //inicializando camara
   }
 
   ngOnDestroy(): void {
@@ -97,10 +105,7 @@ export class CameraPage implements OnInit, OnDestroy {
 
   }
 
-  /*
-  ionViewWillLeave():void{
-    clearInterval(this.videoInterval);
-    console.log("ionViewWillLeave");
 
-  }*/
+
+
 }

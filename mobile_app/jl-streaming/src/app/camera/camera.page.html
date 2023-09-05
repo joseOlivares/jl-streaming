@@ -11,13 +11,30 @@
     </ion-toolbar>
   </ion-header>
 
-  <div>
-    <video src="" id="video" class="video-element2" autoplay="true">
-    </video>
-    <canvas id="canva"></canvas>
-    <div id="status"></div>
-  </div>
+  <ion-grid>
+    <ion-row>
+      <video id="webcam" autoplay playsinline width="webCamWidth" height="webCamHeight"></video>
 
-
-
+      <div *ngIf="!cameraActive">
+        <ion-button (click)="startCamera()" expand="block" id="capture">
+          <ion-icon slot="icon-only" name="videocam-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div *ngIf="cameraActive">
+        <ion-button (click)="streamVideo()" expand="block" id="streaming">
+          <ion-icon name="radio-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="stopCamera()" expand="block" id="close">
+            <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+        </ion-button>
+        <ion-button (click)="flipCamera()" expand="block" id="flip">
+            <ion-icon slot="icon-only" name="repeat"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-row>
+    <ion-row>
+      <canvas id="canvas" class=""></canvas>
+      <audio id="snapSound" src="audio/snap.wav" preload = "auto"></audio>
+    </ion-row>
+  </ion-grid>
 </ion-content>
