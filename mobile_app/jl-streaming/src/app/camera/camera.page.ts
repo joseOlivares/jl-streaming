@@ -19,10 +19,13 @@ export class CameraPage implements OnInit, OnDestroy {
   REAR_CAMERA='environment'
   camera=this.REAR_CAMERA;
 
-  webCamHeight= window.screen.height - 200; //height of the camera
-  webCamWidth= window.screen.width;//width of the camera display
+  //webCamHeight= window.screen.height - 200; //height of the camera
+  //webCamWidth= window.screen.width;//width of the camera display
 
+  webcamElement:any;
   canvasElement:any;
+
+  fps=1000/30;
 
 
 
@@ -40,10 +43,15 @@ export class CameraPage implements OnInit, OnDestroy {
 
   async initializeCamera(){
     this.socketService.connect();
-    const webcamElement = document.getElementById('webcam');
+    this.webcamElement = document.getElementById('webcam');
     this.canvasElement = document.getElementById('canvas');
+    this.webcamElement.width=1280;
+    this.webcamElement.height=720;
+    this.canvasElement.width= 1280;
+    this.canvasElement.height=720;
     const snapSoundElement = document.getElementById('snapSound');
-    this.webCam = new Webcam(webcamElement, this.camera, this.canvasElement, snapSoundElement);
+
+    this.webCam = new Webcam(this.webcamElement, this.camera);
 
       this.webCam.start()
         .then((result: any)=>{
@@ -72,13 +80,22 @@ export class CameraPage implements OnInit, OnDestroy {
   }
 
   streamVideo(){
-    let x=this.canvasElement.toDataURL('image/webp');
-    debugger;
-    /*
+    this.webCam.stream();
+    let context=this.canvasElement.getContext('2d');
+    context.width=this.webcamElement.width;
+    context.height=this.webcamElement.height;
+
     this.videoInterval=setInterval(()=>{
-        this.socketService.emit('stream',this.canvasElement.toDataURL('image/webp'));
-    },30)
-    */
+      context.drawImage(this.webcamElement,0,0, context.width, context.height);
+    },1000/60);
+
+    //let x=this.canvasElement.toDataURL('image/webp');
+    //debugger;
+    /**/
+    this.videoInterval=setInterval(()=>{
+        this.socketService.emit('stream',this.canvasElement.toDataURL('image/jpeg'));
+    },this.fps);
+
   }
 
   flipCamera(){
