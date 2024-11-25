@@ -1,1 +1,1 @@
-# POC Viode Streaming with nodejs, SocketIO and Ionic App
+# POC Video Streaming with nodejs, SocketIO and Ionic App
